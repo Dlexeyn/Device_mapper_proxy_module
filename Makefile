@@ -1,4 +1,4 @@
-obj-m += Hello_target.o
+obj-m += Dmp.o
 
 PWD := $(CURDIR)
 
