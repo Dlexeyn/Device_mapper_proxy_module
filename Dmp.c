@@ -12,8 +12,7 @@ struct dmp_device
     sector_t start;
 };
 
-static int error_ctr(struct dm_device *dd){
-    kfree(dd);
+static int error_ctr(){
     pr_info("out function dmp_ctr with ERROR");
     return -EINVAL;
 }
@@ -40,14 +39,16 @@ static int dmp_ctr(struct dm_target *ti, unsigned int argc, char **argv){
 
     if (sscanf(argv[1], "%llu", &start) != 1){
         ti->error = "dm_device: Ivalid device sector";
-        return error_ctr(&dd);
+        kfree(dd);
+        return error_ctr();
     }
 
     dd->start = (sector_t) start;
 
-    if (dm_get_device(ti, argv[0], dm_get_table_mode(ti->table), &dd->dev)){
+    if (dm_get_device(ti, argv[0], dm_table_get_mode(ti->table), &dd->dev)){
         ti->error = "dm_device: Device lookup failed";
-        return error_ctr(&dd);
+        kfree(dd);
+        return error_ctr();
     }
     
     ti->private = dd;
@@ -59,7 +60,7 @@ static int dmp_ctr(struct dm_target *ti, unsigned int argc, char **argv){
 static void dmp_dtr(struct dm_target *ti){
     struct dm_device *dd = (struct dm_device *) ti->private;
     pr_info("in function dmp_ctr");
-    dmp_put_device(ti, dd->dev);
+    dm_put_device(ti, dd->dev);
     kfree(dd);
     pr_info("out function dmp_ctr");
 }
