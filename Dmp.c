@@ -12,13 +12,14 @@ struct dmp_device
     sector_t start;
 };
 
-static int error_ctr(){
+static struct dm_device *dd;
+
+static int error_ctr(void){
     pr_info("out function dmp_ctr with ERROR");
     return -EINVAL;
 }
 
 static int dmp_ctr(struct dm_target *ti, unsigned int argc, char **argv){
-    struct dmp_device *dd;
     unsigned long long start;
 
     pr_info("in function dmp_ctr\n");
@@ -58,7 +59,6 @@ static int dmp_ctr(struct dm_target *ti, unsigned int argc, char **argv){
 }
 
 static void dmp_dtr(struct dm_target *ti){
-    struct dm_device *dd = (struct dm_device *) ti->private;
     pr_info("in function dmp_ctr");
     dm_put_device(ti, dd->dev);
     kfree(dd);
