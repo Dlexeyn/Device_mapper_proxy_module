@@ -6,13 +6,10 @@
 
 #define DM_NAME = "dmp"
 
-struct dmp_device
-{
+struct dmp_device {
     struct dm_dev *dev;
     sector_t start;
 };
-
-static struct dm_device *dd;
 
 static int error_ctr(void){
     pr_info("out function dmp_ctr with ERROR");
@@ -20,6 +17,7 @@ static int error_ctr(void){
 }
 
 static int dmp_ctr(struct dm_target *ti, unsigned int argc, char **argv){
+    struct dmp_device *dd;
     unsigned long long start;
 
     pr_info("in function dmp_ctr\n");
@@ -59,6 +57,7 @@ static int dmp_ctr(struct dm_target *ti, unsigned int argc, char **argv){
 }
 
 static void dmp_dtr(struct dm_target *ti){
+    struct dmp_device *dd = (struct dmp_device *) ti->private;
     pr_info("in function dmp_ctr");
     dm_put_device(ti, dd->dev);
     kfree(dd);
