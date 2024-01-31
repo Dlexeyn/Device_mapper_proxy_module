@@ -4,7 +4,6 @@
 #include <linux/bio.h>
 #include <linux/device-mapper.h>
 
-#define DM_NAME = "dmp"
 
 struct dmp_device {
     struct dm_dev *dev;
@@ -81,7 +80,7 @@ static int dmp_map(struct dm_target *ti, struct bio *bio){
 }
 
 static struct target_type dmp_target = {
-    .name = "device_mapper_proxy",
+    .name = "dmp",
     .version = {0,0,1},
     .module = THIS_MODULE,
     .ctr = dmp_ctr,
