@@ -81,7 +81,7 @@ static int dmp_map(struct dm_target *ti, struct bio *bio){
     struct dmp_device *dd = (struct dmp_device *) ti->private;
 
     dmp_stats.total_reqs += 1;
-    ewma_size_add(&dmp_stats.total_avg_size, 1);
+    ewma_size_add(&dmp_stats.total_avg_size, bio->bi_iter.bi_size);
 
     switch (bio_op(bio)){
         case REQ_OP_READ:
