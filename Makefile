@@ -1,4 +1,4 @@
-obj-m += Dmp.o
+obj-m += dmp.o
 
 PWD := $(CURDIR)
 
