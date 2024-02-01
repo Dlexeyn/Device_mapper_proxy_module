@@ -18,7 +18,7 @@
 
 ### Сборка и установка
 
-Модуль был протестирован на Ubuntu 22.04.3 LTS.
+Модуль был протестирован на Ubuntu 22.04.3 LTS c ядром 5.15.0-92.
 Для сборки небходим gcc и make.
 Установка данных пакетов в Ubuntu:
 ```bash
@@ -68,6 +68,8 @@ lrwxrwxrwx 1 root root       7 Feb  1 10:35 /dev/mapper/zero1 -> ../dm-1
 Проведем операции на запись и чтение с помощью dd:
 ```bash
 sudo dd if=/dev/random of=/dev/mapper/dmp1 bs=4k count=1
+```
+```bash
 sudo dd of=/dev/null if=/dev/mapper/dmp1 bs=4k count=1
 ```
 
