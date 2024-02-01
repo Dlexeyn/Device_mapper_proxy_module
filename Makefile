@@ -1,4 +1,4 @@
-obj-m += proxy.o
+obj-m += dmp.o
 
 PWD := $(CURDIR)
 
