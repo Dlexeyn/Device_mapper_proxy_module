@@ -1,0 +1,1 @@
+savedcmd_/home/leksil/Projects/C/Yadro_test_task/Kernel-module/dmp.ko := ld -r -m elf_x86_64 -z noexecstack --no-warn-rwx-segments --build-id=sha1  -T scripts/module.lds -o /home/leksil/Projects/C/Yadro_test_task/Kernel-module/dmp.ko /home/leksil/Projects/C/Yadro_test_task/Kernel-module/dmp.o /home/leksil/Projects/C/Yadro_test_task/Kernel-module/dmp.mod.o;  true

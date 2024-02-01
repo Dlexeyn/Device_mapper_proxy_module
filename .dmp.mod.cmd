@@ -1,0 +1,1 @@
+savedcmd_/home/leksil/Projects/C/Yadro_test_task/Kernel-module/dmp.mod := printf '%s\n'   dmp.o | awk '!x[$$0]++ { print("/home/leksil/Projects/C/Yadro_test_task/Kernel-module/"$$0) }' > /home/leksil/Projects/C/Yadro_test_task/Kernel-module/dmp.mod

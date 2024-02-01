@@ -5,12 +5,18 @@
 #include <linux/device-mapper.h>
 #include <linux/average.h>
 
+/*
+** Declare an Exponentially Weighted Moving Average (EWMA).
+*/
 DECLARE_EWMA(size, 6, 4);
 
 struct dmp_device {
     struct dm_dev *dev;
 };
 
+/*
+** Declare a stats struct.
+*/
 struct stats {
     unsigned long read_reqs;
     unsigned long write_reqs;
@@ -24,6 +30,9 @@ static struct kobject *statistic;
 
 static struct stats dmp_stats = {0, 0, 0, }; 
 
+/*
+** This function will be called when we read the sysfs file
+*/
 static ssize_t volumes_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf) {
     return sprintf(buf, "read:\n\treqs:%lu\n\tavg size:%lu\nwrite:\n\treqs:%lu\n\tavg size:%lu\ntotal:\n\treqs:%lu\n\tavg size:%lu\n",
             dmp_stats.read_reqs, (unsigned long) ewma_size_read(&dmp_stats.read_avg_size),
@@ -31,11 +40,18 @@ static ssize_t volumes_show(struct kobject *kobj, struct kobj_attribute *attr, c
             dmp_stats.total_reqs, (unsigned long) ewma_size_read(&dmp_stats.total_avg_size));
 }
 
+/*
+** This function will be called when ctr_functrion failed with error
+*/
 static int error_ctr(void){
     pr_info("out function dmp_ctr with ERROR");
     return -EINVAL;
 }
 
+/*
+** This is constructor function of target gets called when we create some device of type 'dmp'.
+** i.e on execution of command 'dmsetup create'. It gets called per device.
+*/
 static int dmp_ctr(struct dm_target *ti, unsigned int argc, char **argv){
     struct dmp_device *dd;
 
@@ -67,6 +83,10 @@ static int dmp_ctr(struct dm_target *ti, unsigned int argc, char **argv){
     return 0;
 }
 
+/*
+**  This is destruction function, gets called per device.
+**  It removes device and decrement device count.
+*/
 static void dmp_dtr(struct dm_target *ti){
     struct dmp_device *dd = (struct dmp_device *) ti->private;
     pr_info("in function dmp_ctr");
@@ -75,7 +95,10 @@ static void dmp_dtr(struct dm_target *ti){
     pr_info("out function dmp_ctr");
 }
 
-
+/* 
+** Map function, called whenever target gets a bio request.
+** It updates stats struct for read and write operations.  
+*/
 static int dmp_map(struct dm_target *ti, struct bio *bio){
 
     struct dmp_device *dd = (struct dmp_device *) ti->private;
@@ -102,6 +125,7 @@ static int dmp_map(struct dm_target *ti, struct bio *bio){
     return DM_MAPIO_SUBMITTED;
 }
 
+/*  This structure is fops for dmp_target */
 static struct target_type dmp_target = {
     .name = "dmp",
     .version = {0,0,1},
@@ -111,9 +135,13 @@ static struct target_type dmp_target = {
     .map = dmp_map,
 };
 
+/* Sysfs attribute */
 static struct kobj_attribute volume_attr = 
         __ATTR(volumes, 0644, volumes_show, NULL);
 
+/*
+** Module Init function
+*/
 static int init_dmp_target(void) {
     int res = dm_register_target(&dmp_target);
     if(res < 0) {
@@ -143,6 +171,9 @@ static int init_dmp_target(void) {
     return 0;
 }
 
+/*
+** Module exit function
+*/
 static void cleanup_dmp_target(void){
     dm_unregister_target(&dmp_target);
     kobject_put(statistic);
@@ -151,4 +182,5 @@ static void cleanup_dmp_target(void){
 module_init(init_dmp_target);
 module_exit(cleanup_dmp_target);
 MODULE_LICENSE("GPL");
+MODULE_AUTHOR("Dlexeyn <galenko.aleksej17@gmail.com>");
 
