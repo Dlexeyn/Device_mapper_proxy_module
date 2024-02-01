@@ -1,1 +1,0 @@
-savedcmd_/home/leksil/Projects/C/Yadro_test_task/Kernel-module/Module.symvers :=  scripts/mod/modpost -M  -a    -N  -o /home/leksil/Projects/C/Yadro_test_task/Kernel-module/Module.symvers -n -T /home/leksil/Projects/C/Yadro_test_task/Kernel-module/modules.order -i Module.symvers -e 

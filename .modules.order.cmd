@@ -1,1 +1,0 @@
-savedcmd_/home/leksil/Projects/C/Yadro_test_task/Kernel-module/modules.order := {   echo /home/leksil/Projects/C/Yadro_test_task/Kernel-module/dmp.o; :; } > /home/leksil/Projects/C/Yadro_test_task/Kernel-module/modules.order
