@@ -1,11 +1,13 @@
 #!/bin/bash
+size=200
+
 make
 
 sudo insmod dmp.ko
 
-sudo dmsetup create zero1 --table "0 200 zero"
+sudo dmsetup create zero1 --table "0 $size zero"
 
-sudo dmsetup create dmp1 --table "0 200 dmp /dev/mapper/zero1"
+sudo dmsetup create dmp1 --table "0 $size dmp /dev/mapper/zero1"
 
 ls -al /dev/mapper/*
 
