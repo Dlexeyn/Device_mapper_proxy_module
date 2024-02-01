@@ -11,6 +11,11 @@
 - Общее кол-во запросов
 - Средний размер блока 
 
+### Структура проекта
+- Makefile - скрипт сборки для make
+- dmp.c - исходный код модуля
+- test.sh - скрипт автоматической установки и тестирования
+
 ### Сборка и установка
 
 Модуль был протестирован на Ubuntu 22.04.3 LTS.
@@ -21,7 +26,7 @@ sudo apt -y install build-essential
 ```
 Далее небходимо склонировать данный репозиторий:
 ```bash
-git clone https://github.com/Dlexeyn/Device_mapper_proxy_module.git
+git clone https://github.com/Dlexeyn/Device_mapper_proxy_module.git &&
 cd Device_mapper_proxy_module
 ```
 Используйте make для сборки модуля:
@@ -41,14 +46,14 @@ lsmod | grep dmp
 ```bash
 sudo dmsetup create zero1 --table "0 $size zero"
 ```
-где $size - размер устройства
+где _$size_ - размер устройства
 
 Создадим наше dmp устройство:
 
 ```bash
-sudo dmsetup create dmp1 --table "0 $size dmp /dev/mapper/zero1"
+sudo dmsetup create dmp1 --table "0 $size dmp /dev/mapper/zero1
 ```
-где $size - размер /dev/mapper/zero1
+где _$size_ - размер /dev/mapper/zero1
 
 Проверим, что наши устройства создались:
 ```bash
@@ -56,8 +61,8 @@ ls -al /dev/mapper/*
 ```
 ```console
 foo@bar:~$ ls -al /dev/mapper/*
-lrwxrwxrwx 1 root root 7 Feb 21 15:14 /dev/mapper/zero1 -> ../dm-0
-lrwxrwxrwx 1 root root 7 Feb 21 15:14 /dev/mapper/dmp1 -> ../dm-1
+lrwxrwxrwx 1 root root       7 Feb  1 10:35 /dev/mapper/dmp1 -> ../dm-2
+lrwxrwxrwx 1 root root       7 Feb  1 10:35 /dev/mapper/zero1 -> ../dm-1
 ```
 
 Проведем операции на запись и чтение с помощью dd:
@@ -71,14 +76,25 @@ sudo dd of=/dev/null if=/dev/mapper/dmp1 bs=4k count=1
 cat /sys/module/dmp/stat/volumes
 ```
 ```console
- read:
-  reqs: 500
-  avg size: 4096
- write:
-  reqs: 100
-  avg size: 4096
- total:
-  reqs: 600
-  avg size: 4096
-
+read:
+        reqs:90
+        avg size:4274
+write:
+        reqs:2
+        avg size:2048
+total:
+        reqs:92
+        avg size:4182
+```
+### Удаление модуля
+Прежде чем выгрузить модуль, необходимо удалить созданные устройства с помощью dmsetup:
+```bash
+sudo dmsetup remove dmp1
+```
+```bash
+sudo dmsetup remove zero1
+```
+Чтобы выгрузить модуль, необходимо использовать rmmod:
+```bash
+sudo rmmod dmp
 ```
